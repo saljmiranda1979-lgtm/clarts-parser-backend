@@ -32,9 +32,9 @@ def render_pdf(pdf_path: Path, work_dir: Path) -> Path:
 
         pdf = pdfium.PdfDocument(str(pdf_path))
         page = pdf[0]
-        bitmap = page.render(scale=2)
+        bitmap = page.render(scale=1.8)
         image = bitmap.to_pil()
-        image = image.resize((1224, 1584), Image.Resampling.LANCZOS)
+        image = image.resize((1020, 1320), Image.Resampling.LANCZOS)
         image.save(page_png)
         return page_png
     except Exception:
@@ -87,7 +87,7 @@ def is_numeric_line(text: str) -> bool:
     return bool(compact) and compact.isdigit()
 
 
-def numbers_right_of(lines: list[dict], index: int, y_tolerance: float = 18, max_x: float | None = None) -> list[float]:
+def numbers_right_of(lines: list[dict], index: int, y_tolerance: float = 12, max_x: float | None = None) -> list[float]:
     label = lines[index]
     values = []
     for item in lines:
@@ -266,10 +266,10 @@ def parse_report(pdf_path: Path, work_dir: Path | None = None) -> dict:
             "averageConfidence": round(sum(line["confidence"] for line in lines) / max(len(lines), 1), 4),
         },
     }
-    ecology = row_numbers(lines, "ecology", min_y=900, max_label_x=250, max_value_x=650)
-    crr = row_numbers(lines, "crr", min_y=900, max_label_x=250, max_value_x=650)
-    city = row_numbers(lines, "cityofla", min_y=900, max_label_x=250, max_value_x=650)
-    eco = row_numbers(lines, "eco", "recology", min_y=900, max_label_x=250, max_value_x=650)
+    ecology = row_numbers(lines, "ecology", min_y=700, max_label_x=250, max_value_x=650)
+    crr = row_numbers(lines, "crr", min_y=700, max_label_x=250, max_value_x=650)
+    city = row_numbers(lines, "cityofla", min_y=700, max_label_x=250, max_value_x=650)
+    eco = row_numbers(lines, "eco", "recology", min_y=700, max_label_x=250, max_value_x=650)
     data["haulers"] = {
         "Ecology": {"trucksOnSite": pair(ecology, 0), "loadsCompleted": pair(ecology, 1)},
         "CR&R": {"trucksOnSite": pair(crr, 0), "loadsCompleted": pair(crr, 1)},
