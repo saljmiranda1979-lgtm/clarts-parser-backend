@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: clarts-parser-api
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: CLARTS_ALLOWED_ORIGIN
+        value: "*"
